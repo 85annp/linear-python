@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <!-- Background Gradient -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0b1120" />
+      <stop offset="100%" stop-color="#1e293b" />
+    </linearGradient>
+
+    <!-- Python Blue / Cyan Gradient -->
+    <linearGradient id="cyanGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8" />
+      <stop offset="100%" stop-color="#0284c7" />
+    </linearGradient>
+
+    <!-- Python Gold / Amber Gradient -->
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fde047" />
+      <stop offset="100%" stop-color="#f59e0b" />
+    </linearGradient>
+
+    <!-- Vector Glow Filter -->
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="1.5" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <!-- Rounded App Icon Background -->
+  <rect width="64" height="64" rx="15" fill="url(#bgGrad)" stroke="#334155" stroke-width="1.5" />
+
+  <!-- Matrix Left Bracket [ -->
+  <path d="M 17 14 L 10 14 L 10 50 L 17 50" fill="none" stroke="url(#cyanGrad)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" />
+
+  <!-- Matrix Right Bracket ] -->
+  <path d="M 47 14 L 54 14 L 54 50 L 47 50" fill="none" stroke="url(#goldGrad)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" />
+
+  <!-- Matrix Elements Grid (Dots) -->
+  <!-- a11 -->
+  <circle cx="23" cy="24" r="3.2" fill="#38bdf8" />
+  <!-- a12 -->
+  <circle cx="41" cy="24" r="3.2" fill="#94a3b8" />
+  <!-- a21 -->
+  <circle cx="23" cy="40" r="3.2" fill="#94a3b8" />
+  <!-- a22 -->
+  <circle cx="41" cy="40" r="3.2" fill="#fbbf24" />
+
+  <!-- Dynamic Vector Arrow shooting across matrix space -->
+  <path d="M 18 46 L 44 20" fill="none" stroke="#34d399" stroke-width="3.5" stroke-linecap="round" filter="url(#glow)" />
+  <polygon points="46,16 37,20 44,27" fill="#34d399" filter="url(#glow)" />
+</svg>
