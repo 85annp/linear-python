@@ -1,0 +1,1544 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Python i Linjär Algebra | Matematik Specialisering</title>
+  
+  <!-- Google Fonts: Outfit & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- KaTeX for crisp mathematical typography -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+  
+  <!-- Pyodide: Real Python in WebAssembly -->
+  <script src="https://cdn.jsdelivr.net/pyodide/v0.26.4/full/pyodide.js"></script>
+  
+  <!-- Custom Styling -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Floating / Top Status Bar -->
+  <header class="site-header">
+    <div class="header-content">
+      <div class="logo-area">
+        <div class="logo-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="18" height="18" rx="3"/>
+            <path d="M7 8h3m-3 4h3m-3 4h3m4-8h3m-3 4h3m-3 4h3"/>
+          </svg>
+        </div>
+        <div>
+          <h1 class="site-title">Linjär Algebra med Python</h1>
+          <p class="site-subtitle">Matematik – Specialisering &bull; Gymnasieskolan</p>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <div id="pyodide-status" class="status-pill status-loading" title="Status för Python-motorn i webbläsaren">
+          <span class="status-dot"></span>
+          <span class="status-text">Laddar Python & NumPy...</span>
+        </div>
+        <button id="theme-toggle" class="btn-icon" aria-label="Växla färgtema" title="Växla ljust/mörkt läge">
+          <svg class="sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+          <svg class="moon-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="layout-container">
+    
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <nav class="nav-menu">
+        <div class="nav-section-title">Innehållsförteckning</div>
+        <ul>
+          <li><a href="#intro" class="nav-link active"><span class="nav-num">0</span> Introduktion & Python</a></li>
+          <li><a href="#vectors" class="nav-link"><span class="nav-num">1</span> Vektorer & Operationer</a></li>
+          <li><a href="#vector-visualizer" class="nav-link sub-link"><span class="nav-dot">&bull;</span> Interaktiv Vektorgraf</a></li>
+          <li><a href="#matrices" class="nav-link"><span class="nav-num">2</span> Matriser – Grunderna</a></li>
+          <li><a href="#matmul" class="nav-link"><span class="nav-num">3</span> Matrismultiplikation</a></li>
+          <li><a href="#transformations" class="nav-link sub-link"><span class="nav-dot">&bull;</span> Linjära Avbildningar</a></li>
+          <li><a href="#det-inv" class="nav-link"><span class="nav-num">4</span> Determinanter & Inverser</a></li>
+          <li><a href="#lineq" class="nav-link"><span class="nav-num">5</span> Ekvationssystem (A x = b)</a></li>
+          <li><a href="#eigen" class="nav-link"><span class="nav-num">6</span> Egenvärden & Egenvektorer</a></li>
+          <li><a href="#cheatsheet" class="nav-link"><span class="nav-num">7</span> Snabbguide (Cheatsheet)</a></li>
+          <li><a href="#exercises" class="nav-link highlight"><span class="nav-num">8</span> Övningsuppgifter (Testa själv!)</a></li>
+          <li><a href="#sandbox" class="nav-link"><span class="nav-num">9</span> Egen Kod-Sandlåda</a></li>
+        </ul>
+
+        <div class="sidebar-info-card">
+          <h4>Tips till eleven</h4>
+          <p>Varje kodruta kan ändras fritt! Ändra siffror, tryck <strong>Kör kod</strong> och se vad som händer.</p>
+        </div>
+      </nav>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+
+      <!-- Hero Banner -->
+      <section class="hero-card">
+        <div class="hero-badge">Gymnasieskolan &bull; Matematik Specialisering</div>
+        <h2>Linjär Algebra med Python & NumPy</h2>
+        <p class="hero-desc">
+          Välkommen! Denna interaktiva sida är skapad för dig som läser linjär algebra och vill använda 
+          programmering som ett kraftfullt verktyg. Du behöver <strong>inga förkunskaper</strong> i Python — 
+          vi går igenom grunderna steg för steg, med fullt fokus på vektorer, matriser och geometrisk förståelse.
+        </p>
+        <div class="hero-features">
+          <div class="feature-item">
+            <span class="feature-icon">⚡</span>
+            <span><strong>Kör kod direkt:</strong> Inget behöver installeras, all Python körs i din webbläsare.</span>
+          </div>
+          <div class="feature-item">
+            <span class="feature-icon">📐</span>
+            <span><strong>Matematisk precision:</strong> Från vektorrum till egenvärden och ekvationssystem.</span>
+          </div>
+          <div class="feature-item">
+            <span class="feature-icon">🎯</span>
+            <span><strong>Träna själv:</strong> Interaktiva uppgifter i slutet med ledtrådar och facit.</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 0: Introduktion & Grundläggande Python -->
+      <section id="intro" class="content-section">
+        <div class="section-header">
+          <span class="section-tag">Kapitel 0</span>
+          <h2>Introduktion: Python på 3 minuter</h2>
+        </div>
+
+        <div class="text-block">
+          <p>
+            I linjär algebra räknar vi ofta på system med $2 \times 2$- eller $3 \times 3$-matriser för hand. 
+            Men i verkligheten – inom artificiell intelligens, datorgrafik, kvantfysik och ekonomi – hanteras 
+            matriser med miljontals rader och kolumner. Det är här datorn blir oumbärlig.
+          </p>
+          <p>
+            Världens mest använda bibliotek för matrisberäkningar heter <strong>NumPy</strong> (Numerical Python). 
+            Innan vi kastar oss in i vektorer behöver du bara känna till tre grundregler i Python:
+          </p>
+        </div>
+
+        <div class="concept-grid">
+          <div class="concept-card">
+            <div class="concept-icon">1</div>
+            <h4>Variabler</h4>
+            <p>Vi sparar värden med likhetstecknet <code>=</code>. Python förstår automatiskt om det är tal, text eller matriser.</p>
+            <pre class="mini-code"><code>a = 5
+b = 12.5</code></pre>
+          </div>
+          <div class="concept-card">
+            <div class="concept-icon">2</div>
+            <h4>Skriva ut med print()</h4>
+            <p>För att se ett resultat på skärmen använder vi funktionen <code>print()</code>.</p>
+            <pre class="mini-code"><code>print(a + b)
+# Visar: 17.5</code></pre>
+          </div>
+          <div class="concept-card">
+            <div class="concept-icon">3</div>
+            <h4>Importera NumPy</h4>
+            <p>Vi laddar in matematikbiblioteket och ger det kortnamnet <code>np</code> (en universell standard).</p>
+            <pre class="mini-code"><code>import numpy as np</code></pre>
+          </div>
+        </div>
+
+        <!-- First Interactive Code Block -->
+        <div class="code-box-wrapper" data-example-id="intro-ex1">
+          <div class="code-box-header">
+            <div class="code-box-title">
+              <span class="lang-badge">Python</span>
+              <span>Exempel 0.1: Ditt allra första NumPy-program</span>
+            </div>
+            <div class="code-box-controls">
+              <button class="btn-copy" title="Kopiera kod">Kopiera</button>
+              <button class="btn-reset" title="Återställ till ursprunglig kod">Återställ</button>
+              <button class="btn-run">▶ Kör kod</button>
+            </div>
+          </div>
+          <textarea class="code-editor" spellcheck="false"># Importera NumPy-biblioteket
+import numpy as np
+
+# Definiera två tal
+x = 7
+y = 3
+
+print("Addition:", x + y)
+print("Multiplikation:", x * y)
+print("Potens (7 upphöjt till 2):", x**2)
+print("Kvadratrot via NumPy:", np.sqrt(x))
+</textarea>
+          <div class="code-output">
+            <div class="output-header">
+              <span>Terminalutskrift</span>
+              <span class="output-exec-time"></span>
+            </div>
+            <pre class="output-content">Tryck på "Kör kod" ovan för att köra programmet...</pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 1: Vektorer -->
+      <section id="vectors" class="content-section">
+        <div class="section-header">
+          <span class="section-tag">Kapitel 1</span>
+          <h2>Vektorer i Python</h2>
+        </div>
+
+        <div class="text-block">
+          <p>
+            I matematiken betecknar vi en vektor som en ordnad lista av tal, exempelvis 
+            $\vec{u} = \begin{pmatrix} 3 \\ -2 \\ 5 \end{pmatrix} \in \mathbb{R}^3$.
+          </p>
+          <p>
+            I Python skapar vi en vektor med <code>np.array([...])</code>. NumPy behandlar en endimensionell array som en vektor.
+          </p>
+        </div>
+
+        <div class="math-callout">
+          <div class="callout-title">Matematisk repetition</div>
+          <ul>
+            <li><strong>Addition:</strong> $\vec{u} + \vec{v} = \begin{pmatrix} u_1 + v_1 \\ u_2 + v_2 \end{pmatrix}$</li>
+            <li><strong>Skalärmultiplikation:</strong> $k \cdot \vec{u} = \begin{pmatrix} k \cdot u_1 \\ k \cdot u_2 \end{pmatrix}$</li>
+            <li><strong>Längd (Euklidisk norm):</strong> $\|\vec{u}\| = \sqrt{u_1^2 + u_2^2 + \dots + u_n^2}$</li>
+            <li><strong>Skalärprodukt (Dot product):</strong> $\vec{u} \cdot \vec{v} = u_1 v_1 + u_2 v_2 + \dots + u_n v_n$</li>
+          </ul>
+        </div>
+
+        <div class="code-box-wrapper" data-example-id="vec-ex1">
+          <div class="code-box-header">
+            <div class="code-box-title">
+              <span class="lang-badge">Python</span>
+              <span>Exempel 1.1: Vektorräkning med NumPy</span>
+            </div>
+            <div class="code-box-controls">
+              <button class="btn-copy">Kopiera</button>
+              <button class="btn-reset">Återställ</button>
+              <button class="btn-run">▶ Kör kod</button>
+            </div>
+          </div>
+          <textarea class="code-editor" spellcheck="false">import numpy as np
+
+# Skapa två vektorer i R^3
+u = np.array([2, 5, -1])
+v = np.array([4, -2, 3])
+
+print("Vektor u:", u)
+print("Vektor v:", v)
+
+# Vektoraddition och subtraktion
+print("u + v =", u + v)
+print("u - v =", u - v)
+
+# Skalärmultiplikation
+print("3 * u =", 3 * u)
+print("-2 * v =", -2 * v)
+</textarea>
+          <div class="code-output">
+            <div class="output-header">
+              <span>Terminalutskrift</span>
+              <span class="output-exec-time"></span>
+            </div>
+            <pre class="output-content">Tryck på "Kör kod" för att beräkna...</pre>
+          </div>
+        </div>
+
+        <!-- Dot Product and Norm -->
+        <h3>Längd, Skalärprodukt och Vinkel</h3>
+        <p class="text-block">
+          För att beräkna längden $\|\vec{u}\|$ använder vi <code>np.linalg.norm(u)</code>. 
+          För skalärprodukten $\vec{u} \cdot \vec{v}$ har Python en särskild operator: snabel-a (<code>@</code>), 
+          eller funktionen <code>np.dot(u, v)</code>.
+        </p>
+
+        <div class="info-alert">
+          <strong>Tips om vinkel mellan vektorer:</strong> Kom ihåg formeln $\vec{u} \cdot \vec{v} = \|\vec{u}\| \|\vec{v}\| \cos(\theta)$. 
+          Om $\vec{u} \cdot \vec{v} = 0$ och vektorerna är nollskilda är vektorerna <em>ortogonala</em> (vinkelräta)!
+        </div>
+
+        <div class="code-box-wrapper" data-example-id="vec-ex2">
+          <div class="code-box-header">
+            <div class="code-box-title">
+              <span class="lang-badge">Python</span>
+              <span>Exempel 1.2: Norm, Skalärprodukt och Vinkelberäkning</span>
+            </div>
+            <div class="code-box-controls">
+              <button class="btn-copy">Kopiera</button>
+              <button class="btn-reset">Återställ</button>
+              <button class="btn-run">▶ Kör kod</button>
+            </div>
+          </div>
+          <textarea class="code-editor" spellcheck="false">import numpy as np
+
+# Två vektorer
+u = np.array([3, 4])
+v = np.array([4, -3])
+
+# 1. Längd (norm)
+langd_u = np.linalg.norm(u)
+langd_v = np.linalg.norm(v)
+print(f"Längden ||u|| = {langd_u}")
+print(f"Längden ||v|| = {langd_v}")
+
+# 2. Skalärprodukt (både @ och np.dot fungerar)
+skalarprodukt = u @ v  # eller np.dot(u, v)
+print(f"Skalärprodukt u · v = {skalarprodukt}")
+
+if skalarprodukt == 0:
+    print("-> u och v är ortogonala (vinkelräta)!")
+
+# 3. Kryssprodukt i R^3 (np.cross)
+u3 = np.array([1, 0, 0])
+v3 = np.array([0, 1, 0])
+kryss = np.cross(u3, v3)
+print(f"\nKryssprodukt (1,0,0) x (0,1,0) = {kryss}")
+</textarea>
+          <div class="code-output">
+            <div class="output-header">
+              <span>Terminalutskrift</span>
+              <span class="output-exec-time"></span>
+            </div>
+            <pre class="output-content">Tryck på "Kör kod" för att beräkna...</pre>
+          </div>
+        </div>
+
+        <!-- Interactive Vector Visualizer Tool -->
+        <div id="vector-visualizer" class="interactive-tool-card">
+          <div class="tool-header">
+            <div class="tool-title-wrap">
+              <span class="tool-badge">Interaktivt Verktyg</span>
+              <h3>Geometrisk Vektor-Visualiserare (2D)</h3>
+            </div>
+            <p>Dra i reglagen eller skriv in värden för vektor $\vec{u}$ och $\vec{v}$ och se deras summa och skalärprodukt i realtid!</p>
+          </div>
+
+          <div class="visualizer-grid">
+            <div class="canvas-wrap">
+              <canvas id="vectorCanvas" width="460" height="460"></canvas>
+            </div>
+            <div class="visualizer-controls">
+              <div class="vector-input-group u-group">
+                <span class="vector-label color-u">Vektor $\vec{u} = (u_x, u_y)$</span>
+                <div class="slider-row">
+                  <label>u<sub>x</sub>: <span id="val-ux">3</span></label>
+                  <input type="range" id="slider-ux" min="-6" max="6" step="0.5" value="3">
+                </div>
+                <div class="slider-row">
+                  <label>u<sub>y</sub>: <span id="val-uy">2</span></label>
+                  <input type="range" id="slider-uy" min="-6" max="6" step="0.5" value="2">
+                </div>
+              </div>
+
+              <div class="vector-input-group v-group">
+                <span class="vector-label color-v">Vektor $\vec{v} = (v_x, v_y)$</span>
+                <div class="slider-row">
+                  <label>v<sub>x</sub>: <span id="val-vx">-1</span></label>
+                  <input type="range" id="slider-vx" min="-6" max="6" step="0.5" value="-1">
+                </div>
+                <div class="slider-row">
+                  <label>v<sub>y</sub>: <span id="val-vy">3</span></label>
+                  <input type="range" id="slider-vy" min="-6" max="6" step="0.5" value="3">
+                </div>
+              </div>
+
+              <div class="vis-options">
+                <label><input type="checkbox" id="check-sum" checked> Visa summan $\vec{u} + \vec{v}$ (parallellogram)</label>
+              </div>
+
+              <div class="vis-stats">
+                <div class="stat-box">
+                  <span class="stat-title">$\|\vec{u}\|$</span>
+                  <span id="stat-norm-u" class="stat-value">3.61</span>
+                </div>
+                <div class="stat-box">
+                  <span class="stat-title">$\|\vec{v}\|$</span>
+                  <span id="stat-norm-v" class="stat-value">3.16</span>
+                </div>
+                <div class="stat-box">
+                  <span class="stat-title">$\vec{u} \cdot \vec{v}$</span>
+                  <span id="stat-dot" class="stat-value">3.00</span>
+                </div>
+                <div class="stat-box">
+                  <span class="stat-title">Vinkel $\theta$</span>
+                  <span id="stat-angle" class="stat-value">74.7°</span>
+                </div>
+              </div>
+
+              <div class="vis-python-preview">
+                <div class="vis-code-title">NumPy-kod för detta läge:</div>
+                <code id="vis-code-snippet">u = np.array([3, 2])
+v = np.array([-1, 3])
+u_plus_v = u + v  # [2, 5]</code>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- Section 2: Matriser - Grunderna -->
+      <section id="matrices" class="content-section">
+        <div class="section-header">
+          <span class="section-tag">Kapitel 2</span>
+          <h2>Matriser – Grunderna</h2>
+        </div>
+
+        <div class="text-block">
+          <p>
+            En matris är en rektangulär tabell med tal ordnade i <strong>rader</strong> och <strong>kolumner</strong>. 
+            I Python representeras en matris som en <em>tvådimensionell array</em>: en lista med listor!
+          </p>
+          <p>
+            Exempelvis definieras en $2 \times 3$-matris (2 rader, 3 kolumner):
+            $$A = \begin{pmatrix} 1 & 2 & 3 \\ 4 & 5 & 6 \end{pmatrix}$$
+            i Python med <code>np.array([[1, 2, 3], [4, 5, 6]])</code>. 
+            Varje inre klammer <code>[...]</code> motsvarar en rad!
+          </p>
+        </div>
+
+        <div class="code-box-wrapper" data-example-id="mat-ex1">
+          <div class="code-box-header">
+            <div class="code-box-title">
+              <span class="lang-badge">Python</span>
+              <span>Exempel 2.1: Skapa och inspektera matriser</span>
+            </div>
+            <div class="code-box-controls">
+              <button class="btn-copy">Kopiera</button>
+              <button class="btn-reset">Återställ</button>
+              <button class="btn-run">▶ Kör kod</button>
+            </div>
+          </div>
+          <textarea class="code-editor" spellcheck="false">import numpy as np
+
+# Skapa en 2x3-matris
+A = np.array([
+    [1, 2, 3],
+    [4, 5, 6]
+])
+
+print("Matris A:\n", A)
+
+# Inspektera formen (shape) -> (rader, kolumner)
+print("Form (rader, kolumner):", A.shape)
+
+# Transponatet A^T (rader blir kolumner)
+print("Transponatet A.T:\n", A.T)
+print("A.T har formen:", A.T.shape)
+</textarea>
+          <div class="code-output">
+            <div class="output-header">
+              <span>Terminalutskrift</span>
+              <span class="output-exec-time"></span>
+            </div>
+            <pre class="output-content">Tryck på "Kör kod" för att köra...</pre>
+          </div>
+        </div>
+
+        <!-- Indexing and Special Matrices -->
+        <h3>Indexering och Speciella Matriser</h3>
+        <div class="warning-callout">
+          <strong>Varning för nollbaserad indexering!</strong><br>
+          I matematik kallas elementet överst till vänster $a_{11}$. Men i Python börjar räkningen på <strong>0</strong>!<br>
+          Elementet på rad 0, kolumn 0 skrivs <code>A[0, 0]</code>. Rad 1, kolumn 2 skrivs <code>A[1, 2]</code>.
+        </div>
+
+        <div class="code-box-wrapper" data-example-id="mat-ex2">
+          <div class="code-box-header">
+            <div class="code-box-title">
+              <span class="lang-badge">Python</span>
+              <span>Exempel 2.2: Speciella matriser & Indexering</span>
+            </div>
+            <div class="code-box-controls">
+              <button class="btn-copy">Kopiera</button>
+              <button class="btn-reset">Återställ</button>
+              <button class="btn-run">▶ Kör kod</button>
+            </div>
+          </div>
+          <textarea class="code-editor" spellcheck="false">import numpy as np
+
+# 1. Enhetsmatris (Identity matrix) I_3
+I = np.eye(3)
+print("Enhetsmatris I (3x3):\n", I)
+
+# 2. Nollmatris (Zeros)
+Z = np.zeros((2, 4))
+print("\nNollmatris 2x4:\n", Z)
+
+# 3. Indexera och plocka ut delar ur en matris
+M = np.array([
+    [10, 20, 30],
+    [40, 50, 60],
+    [70, 80, 90]
+])
+
+print("\nElementet på rad 0, kolumn 1:", M[0, 1])  # 20
+print("Hela rad index 1:", M[1, :])             # [40, 50, 60]
+print("Hela kolumn index 2:", M[:, 2])          # [30, 60, 90]
+</textarea>
+          <div class="code-output">
+            <div class="output-header">
+              <span>Terminalutskrift</span>
+              <span class="output-exec-time"></span>
+            </div>
+            <pre class="output-content">Tryck på "Kör kod" för att köra...</pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 3: Matrismultiplikation -->
+      <section id="matmul" class="content-section">
+        <div class="section-header">
+          <span class="section-tag">Kapitel 3</span>
+          <h2>Matrismultiplikation & Linjära Avbildningar</h2>
+        </div>
+
+        <div class="text-block">
+          <p>
+            Detta är det enskilt viktigaste kapitlet! Matrismultiplikation är <strong>inte</strong> elementvis multiplikation.
+          </p>
+          <p>
+            För att multiplicera två matriser $A \cdot B$ måste antalet kolumner i $A$ vara lika med antalet rader i $B$:
+            $$(m \times \mathbf{k}) \cdot (\mathbf{k} \times n) = (m \times n)$$
+          </p>
+        </div>
+
+        <div class="pitfall-box">
+          <div class="pitfall-header">
+            <span class="pitfall-badge">Vanligaste Nybörjarfällan!</span>
+            <h4>Skillnaden mellan * och @ i Python</h4>
+          </div>
+          <div class="pitfall-grid">
+            <div class="pitfall-col bad">
+              <code>A * B</code>
+              <p><strong>Elementvis multiplikation</strong> (Hadamard-produkt). Multiplicerar bara tal på samma position. Detta är oftast INTE det du vill ha i linjär algebra!</p>
+            </div>
+            <div class="pitfall-col good">
+              <code>A @ B</code> eller <code>np.matmul(A, B)</code>
+              <p><strong>Riktig matrismultiplikation</strong> (rad gånger kolumn). Det är denna du använder för linjära transformationer och ekvationssystem!</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="code-box-wrapper" data-example-id="matmul-ex1">
+          <div class="code-box-header">
+            <div class="code-box-title">
+              <span class="lang-badge">Python</span>
+              <span>Exempel 3.1: Matrismultiplikation och icke-kommutativitet</span>
+            </div>
+            <div class="code-box-controls">
+              <button class="btn-copy">Kopiera</button>
+              <button class="btn-reset">Återställ</button>
+              <button class="btn-run">▶ Kör kod</button>
+            </div>
+          </div>
+          <textarea class="code-editor" spellcheck="false">import numpy as np
+
+A = np.array([
+    [1, 2],
+    [3, 4]
+])
+
+B = np.array([
+    [2, 0],
+    [1, 2]
+])
+
+# Riktig matrismultiplikation med @
+AB = A @ B
+BA = B @ A
+
+print("A @ B =\n", AB)
+print("\nB @ A =\n", BA)
+
+# Icke-kommutativitet: AB != BA i allmänhet!
+lika = np.array_equal(AB, BA)
+print(f"\nÄr AB == BA? Svar: {lika} (Matrismultiplikation är ej kommutativ!)")
+</textarea>
+          <div class="code-output">
+            <div class="output-header">
+              <span>Terminalutskrift</span>
+              <span class="output-exec-time"></span>
+            </div>
+            <pre class="output-content">Tryck på "Kör kod" för att köra...</pre>
+          </div>
+        </div>
+
+        <!-- Section 3b: Transformations -->
+        <div id="transformations">
+          <h3>Geometrisk tolkning: Linjära avbildningar i planet</h3>
+          <p class="text-block">
+            En matris kan tolkas som en <em>geometrisk förflyttning</em> (transformation) av rummet. 
+            När vi multiplicerar en matris $A$ med en vektor $\vec{v}$, flyttas vektorn till en ny position $\vec{w} = A \vec{v}$.
+          </p>
+          <p class="text-block">
+            En <strong>rotationsmatris</strong> som roterar en vektor vinkeln $\theta$ moturs ges av:
+            $$R_\theta = \begin{pmatrix} \cos\theta & -\sin\theta \\ \sin\theta & \cos\theta \end{pmatrix}$$
+          </p>
+
+          <div class="code-box-wrapper" data-example-id="matmul-ex2">
+            <div class="code-box-header">
+              <div class="code-box-title">
+                <span class="lang-badge">Python</span>
+                <span>Exempel 3.2: Rotera en vektor 90 grader moturs</span>
+              </div>
+              <div class="code-box-controls">
+                <button class="btn-copy">Kopiera</button>
+                <button class="btn-reset">Återställ</button>
+                <button class="btn-run">▶ Kör kod</button>
+              </div>
+            </div>
+            <textarea class="code-editor" spellcheck="false">import numpy as np
+
+# Vinkel 90 grader (pi / 2 radianer)
+theta = np.pi / 2
+
+# Skapa rotationsmatrisen R
+R = np.array([
+    [np.cos(theta), -np.sin(theta)],
+    [np.sin(theta),  np.cos(theta)]
+])
+
+# Vektor längs x-axeln: (1, 0)
+v = np.array([1.0, 0.0])
+
+# Applicera transformationen: ny_v = R @ v
+ny_v = R @ v
+
+print("Ursprunglig vektor v:", v)
+print("Rotationsmatris R:\n", np.round(R, 4))
+print("Vektor efter 90 graders rotation:", np.round(ny_v, 4))
+print("-> Som väntat hamnar den nu längs y-axeln på (0, 1)!")
+</textarea>
+            <div class="code-output">
+              <div class="output-header">
+                <span>Terminalutskrift</span>
+                <span class="output-exec-time"></span>
+              </div>
+              <pre class="output-content">Tryck på "Kör kod" för att köra...</pre>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 4: Determinant & Invers -->
+      <section id="det-inv" class="content-section">
+        <div class="section-header">
+          <span class="section-tag">Kapitel 4</span>
+          <h2>Determinanter och Inversmatriser</h2>
+        </div>
+
+        <div class="text-block">
+          <p>
+            Två av de mest centrala begreppen för kvadratiska matriser är <strong>determinanten</strong> och <strong>inversmatrisen</strong>.
+          </p>
+        </div>
+
+        <div class="concept-grid">
+          <div class="concept-card">
+            <h4>Determinanten $\det(A)$</h4>
+            <p>Ett tal som beskriver hur mycket arean (i 2D) eller volymen (i 3D) skalas av avbildningen.</p>
+            <p>I Python beräknas den med <code>np.linalg.det(A)</code>.</p>
+          </div>
+          <div class="concept-card">
+            <h4>Inversmatrisen $A^{-1}$</h4>
+            <p>Den matris som "ångrar" avbildningen $A$, så att $A \cdot A^{-1} = I$.</p>
+            <p>I Python beräknas den med <code>np.linalg.inv(A)</code>.</p>
+          </div>
+        </div>
+
+        <div class="info-alert">
+          <strong>Huvudsatsen:</strong> En kvadratisk matris $A$ är inverterbar <em>om och endast om</em> $\det(A) \neq 0$. 
+          Om $\det(A) = 0$ kallas matrisen <em>singulär</em> (plattar ut rymden till en linje eller punkt) och saknar invers!
+        </div>
+
+        <div class="code-box-wrapper" data-example-id="det-ex1">
+          <div class="code-box-header">
+            <div class="code-box-title">
+              <span class="lang-badge">Python</span>
+              <span>Exempel 4.1: Determinant, Invers och Kontroll</span>
+            </div>
+            <div class="code-box-controls">
+              <button class="btn-copy">Kopiera</button>
+              <button class="btn-reset">Återställ</button>
+              <button class="btn-run">▶ Kör kod</button>
+            </div>
+          </div>
+          <textarea class="code-editor" spellcheck="false">import numpy as np
+
+A = np.array([
+    [4, 7],
+    [2, 6]
+])
+
+# 1. Determinant
+det_A = np.linalg.det(A)
+print(f"Determinant det(A) = {det_A:.2f}")
+
+# 2. Inversmatris A^(-1)
+A_inv = np.linalg.inv(A)
+print("\nInversmatris A^(-1):\n", A_inv)
+
+# 3. Kontroll: Blir A @ A_inv = Enhetsmatrisen I?
+produkt = A @ A_inv
+print("\nA @ A^(-1):\n", np.round(produkt, 4))
+
+# np.allclose kontrollerar om två matriser är numeriskt identiska
+print("\nÄr produkten lika med enhetsmatrisen?", np.allclose(produkt, np.eye(2)))
+</textarea>
+          <div class="code-output">
+            <div class="output-header">
+              <span>Terminalutskrift</span>
+              <span class="output-exec-time"></span>
+            </div>
+            <pre class="output-content">Tryck på "Kör kod" för att köra...</pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 5: Linjära Ekvationssystem -->
+      <section id="lineq" class="content-section">
+        <div class="section-header">
+          <span class="section-tag">Kapitel 5</span>
+          <h2>Lösa Linjära Ekvationssystem ($A\vec{x} = \vec{b}$)</h2>
+        </div>
+
+        <div class="text-block">
+          <p>
+            Att lösa linjära ekvationssystem är en av de vanligaste tillämpningarna i Matematik Specialisering. 
+            Ett ekvationssystem:
+          </p>
+          $$\begin{cases}
+          2x_1 + x_2 - x_3 = 8 \\
+          -3x_1 - x_2 + 2x_3 = -11 \\
+          -2x_1 + x_2 + 2x_3 = -3
+          \end{cases}$$
+          <p>
+            kan skrivas på kompakt matrisform som:
+            $$A \vec{x} = \vec{b}$$
+            där koefficientmatrisen $A$ och högerledet $\vec{b}$ är:
+            $$A = \begin{pmatrix} 2 & 1 & -1 \\ -3 & -1 & 2 \\ -2 & 1 & 2 \end{pmatrix}, \quad \vec{b} = \begin{pmatrix} 8 \\ -11 \\ -3 \end{pmatrix}$$
+          </p>
+          <p>
+            I Python löser vi detta blixtsnabbt med <code>np.linalg.solve(A, b)</code>! 
+            (Python använder en extremt optimerad variant av Gausselimination och LU-faktorisering).
+          </p>
+        </div>
+
+        <div class="code-box-wrapper" data-example-id="solve-ex1">
+          <div class="code-box-header">
+            <div class="code-box-title">
+              <span class="lang-badge">Python</span>
+              <span>Exempel 5.1: Lösa 3x3-system med np.linalg.solve</span>
+            </div>
+            <div class="code-box-controls">
+              <button class="btn-copy">Kopiera</button>
+              <button class="btn-reset">Återställ</button>
+              <button class="btn-run">▶ Kör kod</button>
+            </div>
+          </div>
+          <textarea class="code-editor" spellcheck="false">import numpy as np
+
+# Koefficientmatrisen A
+A = np.array([
+    [ 2,  1, -1],
+    [-3, -1,  2],
+    [-2,  1,  2]
+])
+
+# Högerledet b
+b = np.array([8, -11, -3])
+
+# Lös systemet A * x = b
+x = np.linalg.solve(A, b)
+
+print("Lösningsvektor x:")
+print(f"x_1 = {x[0]:.2f}")
+print(f"x_2 = {x[1]:.2f}")
+print(f"x_3 = {x[2]:.2f}")
+
+# Kontrollera att A @ x faktiskt ger b:
+print("\nKontroll A @ x:", A @ x)
+print("Stämmer med b?", np.allclose(A @ x, b))
+</textarea>
+          <div class="code-output">
+            <div class="output-header">
+              <span>Terminalutskrift</span>
+              <span class="output-exec-time"></span>
+            </div>
+            <pre class="output-content">Tryck på "Kör kod" för att köra...</pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 6: Egenvärden och Egenvektorer -->
+      <section id="eigen" class="content-section">
+        <div class="section-header">
+          <span class="section-tag">Kapitel 6 (Fördjupning)</span>
+          <h2>Egenvärden och Egenvektorer</h2>
+        </div>
+
+        <div class="text-block">
+          <p>
+            När en matris $A$ appliceras på en vektor $\vec{v}$ ändrar vektorn oftast både längd och riktning. 
+            Men för vissa speciella vektorer ändras <strong>bara längden</strong> — riktningen förblir densamma! 
+            Dessa kallas <strong>egenvektorer</strong>:
+            $$A \vec{v} = \lambda \vec{v}$$
+            där skalären $\lambda$ (lambda) är <strong>egenvärdet</strong>.
+          </p>
+          <p>
+            Detta är hjärtat i Googles PageRank-algoritm, stabilitetsanalys i brokonstruktioner, och kvantmekanik.
+          </p>
+        </div>
+
+        <div class="code-box-wrapper" data-example-id="eigen-ex1">
+          <div class="code-box-header">
+            <div class="code-box-title">
+              <span class="lang-badge">Python</span>
+              <span>Exempel 6.1: Beräkna egenvärden med np.linalg.eig</span>
+            </div>
+            <div class="code-box-controls">
+              <button class="btn-copy">Kopiera</button>
+              <button class="btn-reset">Återställ</button>
+              <button class="btn-run">▶ Kör kod</button>
+            </div>
+          </div>
+          <textarea class="code-editor" spellcheck="false">import numpy as np
+
+# En symmetrisk 2x2 matris
+A = np.array([
+    [4, 1],
+    [2, 3]
+])
+
+# np.linalg.eig returnerar både egenvärden och egenvektorer
+evals, evecs = np.linalg.eig(A)
+
+print("Egenvärden (lambda):", evals)
+print("\nEgenvektorer (kolumner i matrisen):\n", evecs)
+
+# Verifiera definitionen A @ v = lambda * v för första paret:
+lam1 = evals[0]
+v1 = evecs[:, 0]  # Första kolumnen
+
+vansterled = A @ v1
+hogerled = lam1 * v1
+
+print("\n--- Verifiering för första egenvärdet ---")
+print("A @ v1        =", vansterled)
+print("lambda1 * v1  =", hogerled)
+print("Är de lika?", np.allclose(vansterled, hogerled))
+</textarea>
+          <div class="code-output">
+            <div class="output-header">
+              <span>Terminalutskrift</span>
+              <span class="output-exec-time"></span>
+            </div>
+            <pre class="output-content">Tryck på "Kör kod" för att köra...</pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 7: Cheatsheet -->
+      <section id="cheatsheet" class="content-section">
+        <div class="section-header">
+          <span class="section-tag">Referens</span>
+          <h2>Snabbguide (Cheatsheet) – Linjär Algebra i NumPy</h2>
+        </div>
+
+        <div class="table-responsive">
+          <table class="cheatsheet-table">
+            <thead>
+              <tr>
+                <th>Matematisk operation</th>
+                <th>NumPy-syntax</th>
+                <th>Exempel / Förklaring</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Skapa vektor $\vec{v}$</td>
+                <td><code>np.array([1, 2, 3])</code></td>
+                <td>Endimensionell array</td>
+              </tr>
+              <tr>
+                <td>Skapa matris $A$</td>
+                <td><code>np.array([[1, 2], [3, 4]])</code></td>
+                <td>Tvådimensionell array (rader i klamrar)</td>
+              </tr>
+              <tr>
+                <td>Vektorlängd $\|\vec{v}\|$</td>
+                <td><code>np.linalg.norm(v)</code></td>
+                <td>Euklidisk norm (avstånd från origo)</td>
+              </tr>
+              <tr>
+                <td>Skalärprodukt $\vec{u} \cdot \vec{v}$</td>
+                <td><code>u @ v</code> eller <code>np.dot(u, v)</code></td>
+                <td>Ger ett skalärt tal</td>
+              </tr>
+              <tr>
+                <td>Kryssprodukt $\vec{u} \times \vec{v}$</td>
+                <td><code>np.cross(u, v)</code></td>
+                <td>Endast definierat i 3D (ortogonal vektor)</td>
+              </tr>
+              <tr>
+                <td>Matrismultiplikation $A \cdot B$</td>
+                <td><code>A @ B</code> eller <code>np.matmul(A, B)</code></td>
+                <td><strong>OBS:</strong> Använd inte <code>A * B</code>!</td>
+              </tr>
+              <tr>
+                <td>Transponat $A^T$</td>
+                <td><code>A.T</code></td>
+                <td>Vänder rader till kolumner</td>
+              </tr>
+              <tr>
+                <td>Enhetsmatris $I_n$</td>
+                <td><code>np.eye(n)</code></td>
+                <td>$n \times n$-matris med 1:or på diagonalen</td>
+              </tr>
+              <tr>
+                <td>Determinant $\det(A)$</td>
+                <td><code>np.linalg.det(A)</code></td>
+                <td>Kräver kvadratisk matris</td>
+              </tr>
+              <tr>
+                <td>Inversmatris $A^{-1}$</td>
+                <td><code>np.linalg.inv(A)</code></td>
+                <td>Kräver $\det(A) \neq 0$</td>
+              </tr>
+              <tr>
+                <td>Lös $A\vec{x} = \vec{b}$</td>
+                <td><code>np.linalg.solve(A, b)</code></td>
+                <td>Exakt och stabil lösningsmetod</td>
+              </tr>
+              <tr>
+                <td>Egenvärden & Egenvektorer</td>
+                <td><code>evals, evecs = np.linalg.eig(A)</code></td>
+                <td>$A\vec{v} = \lambda\vec{v}$</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Section 8: Övningsuppgifter -->
+      <section id="exercises" class="content-section">
+        <div class="section-header">
+          <span class="section-tag highlight-tag">Träna Själv</span>
+          <h2>Övningsuppgifter: Sätt kunskaperna på prov</h2>
+          <p class="section-subtitle">
+            Här är fem övningar anpassade för Matematik Specialisering. Skriv din kod direkt i rutorna, 
+            kör den, och använd ledtrådarna eller lösningsförslaget om du kör fast!
+          </p>
+        </div>
+
+        <!-- Exercise 1 -->
+        <div class="exercise-card" id="ex-card-1">
+          <div class="exercise-header">
+            <div class="exercise-title-wrap">
+              <span class="difficulty-badge level-easy">Nivå 1: Grundläggande</span>
+              <h3>Uppgift 1: Vektorräkning och vinklar</h3>
+            </div>
+          </div>
+          <div class="exercise-body">
+            <p class="exercise-text">
+              Givna är vektorerna $\vec{u} = \begin{pmatrix} 4 \\ -3 \end{pmatrix}$ och $\vec{v} = \begin{pmatrix} 2 \\ 5 \end{pmatrix}$.
+            </p>
+            <ol class="exercise-subtasks">
+              <li>Beräkna den linjära kombinationen $\vec{w} = 3\vec{u} - 2\vec{v}$.</li>
+              <li>Beräkna längden $\|\vec{u}\|$.</li>
+              <li>Beräkna skalärprodukten $\vec{u} \cdot \vec{v}$ och avgör om vinkeln mellan vektorerna är spetsig, rät eller trubbig.</li>
+            </ol>
+
+            <div class="code-box-wrapper" data-example-id="exercise-1">
+              <div class="code-box-header">
+                <div class="code-box-title">
+                  <span class="lang-badge">Övning 1</span>
+                  <span>Din kod:</span>
+                </div>
+                <div class="code-box-controls">
+                  <button class="btn-reset">Återställ</button>
+                  <button class="btn-run">▶ Kör kod</button>
+                  <button class="btn-check" data-exercise="1">✨ Rätta mitt svar</button>
+                </div>
+              </div>
+              <textarea class="code-editor" spellcheck="false">import numpy as np
+
+# Skapa vektorerna
+u = np.array([4, -3])
+v = np.array([2, 5])
+
+# 1. Beräkna w = 3*u - 2*v
+w = None  # Skriv din kod här!
+print("w =", w)
+
+# 2. Beräkna längden av u
+norm_u = None  # Skriv din kod här!
+print("Längd av u =", norm_u)
+
+# 3. Beräkna skalärprodukten
+dot_uv = None  # Skriv din kod här!
+print("u · v =", dot_uv)
+</textarea>
+              <div class="code-output">
+                <div class="output-header">
+                  <span>Terminalutskrift</span>
+                  <span class="output-exec-time"></span>
+                </div>
+                <pre class="output-content">Skriv din lösning och klicka på "Kör min kod"...</pre>
+              </div>
+            </div>
+
+            <div class="exercise-accordion">
+              <details class="hint-details">
+                <summary class="hint-summary">💡 Visa ledtråd</summary>
+                <div class="accordion-content">
+                  <p>För linjärkombinationen kan du räkna direkt med vanliga räknesätt: <code>3*u - 2*v</code>.</p>
+                  <p>För längd, använd <code>np.linalg.norm(u)</code>. För skalärprodukt, använd <code>u @ v</code>.</p>
+                  <p>Kom ihåg: Om $\vec{u} \cdot \vec{v} &lt; 0$ är $\cos\theta &lt; 0$, vilket innebär att vinkeln är trubbig (&gt; 90°)!</p>
+                </div>
+              </details>
+
+              <details class="solution-details">
+                <summary class="solution-summary">✅ Visa fullständigt lösningsförslag</summary>
+                <div class="accordion-content">
+                  <div class="solution-actions"><button type="button" class="btn-load-solution" data-exercise="1">📋 Kopiera lösningskoden till editorn ovan</button></div>
+                  <pre class="solution-code"><code>import numpy as np
+
+u = np.array([4, -3])
+v = np.array([2, 5])
+
+# 1. Linjärkombination
+w = 3*u - 2*v
+print("1. w =", w)  # [8, -19]
+
+# 2. Längd
+norm_u = np.linalg.norm(u)
+print(f"2. ||u|| = {norm_u}")  # 5.0 (eftersom sqrt(4^2 + (-3)^2) = 5)
+
+# 3. Skalärprodukt
+dot_uv = u @ v
+print(f"3. u · v = {dot_uv}")  # -7
+
+if dot_uv < 0:
+    print("-> Eftersom skalärprodukten är negativ är vinkeln trubbig (> 90 grader)!")
+elif dot_uv == 0:
+    print("-> Vektorerna är vinkelräta!")
+else:
+    print("-> Vinkeln är spetsig (< 90 grader)!")</code></pre>
+                </div>
+              </details>
+            </div>
+          </div>
+        </div>
+
+        <!-- Exercise 2 -->
+        <div class="exercise-card" id="ex-card-2">
+          <div class="exercise-header">
+            <div class="exercise-title-wrap">
+              <span class="difficulty-badge level-easy">Nivå 1: Grundläggande</span>
+              <h3>Uppgift 2: Matrispotenser och Nilpotens</h3>
+            </div>
+          </div>
+          <div class="exercise-body">
+            <p class="exercise-text">
+              En matris $N$ kallas <em>nilpotent</em> om det finns ett heltal $k$ sådant att $N^k = 0$ (nollmatrisen).
+              Betrakta matrisen:
+              $$N = \begin{pmatrix} 0 & 2 & 1 \\ 0 & 0 & 3 \\ 0 & 0 & 0 \end{pmatrix}$$
+            </p>
+            <ol class="exercise-subtasks">
+              <li>Skapa matrisen $N$ i Python.</li>
+              <li>Beräkna $N^2 = N \cdot N$.</li>
+              <li>Beräkna $N^3 = N \cdot N \cdot N$. Blir den nollmatrisen?</li>
+            </ol>
+
+            <div class="code-box-wrapper" data-example-id="exercise-2">
+              <div class="code-box-header">
+                <div class="code-box-title">
+                  <span class="lang-badge">Övning 2</span>
+                  <span>Din kod:</span>
+                </div>
+                <div class="code-box-controls">
+                  <button class="btn-reset">Återställ</button>
+                  <button class="btn-run">▶ Kör kod</button>
+                  <button class="btn-check" data-exercise="2">✨ Rätta mitt svar</button>
+                </div>
+              </div>
+              <textarea class="code-editor" spellcheck="false">import numpy as np
+
+# Definiera matrisen N
+N = np.array([
+    [0, 2, 1],
+    [0, 0, 3],
+    [0, 0, 0]
+])
+
+# Beräkna N^2 och N^3 (Kom ihåg att använda @ för matrismultiplikation!)
+N2 = None
+N3 = None
+
+print("N^2 =\n", N2)
+print("N^3 =\n", N3)
+</textarea>
+              <div class="code-output">
+                <div class="output-header">
+                  <span>Terminalutskrift</span>
+                  <span class="output-exec-time"></span>
+                </div>
+                <pre class="output-content">Skriv din lösning och klicka på "Kör min kod"...</pre>
+              </div>
+            </div>
+
+            <div class="exercise-accordion">
+              <details class="hint-details">
+                <summary class="hint-summary">💡 Visa ledtråd</summary>
+                <div class="accordion-content">
+                  <p>Skriv <code>N2 = N @ N</code> och <code>N3 = N2 @ N</code>.</p>
+                  <p>Obs: <code>N**2</code> i Python gör bara elementvis upphöjning! För matrismultiplikation måste du använda <code>@</code>.</p>
+                </div>
+              </details>
+
+              <details class="solution-details">
+                <summary class="solution-summary">✅ Visa fullständigt lösningsförslag</summary>
+                <div class="accordion-content">
+                  <div class="solution-actions"><button type="button" class="btn-load-solution" data-exercise="2">📋 Kopiera lösningskoden till editorn ovan</button></div>
+                  <pre class="solution-code"><code>import numpy as np
+
+N = np.array([
+    [0, 2, 1],
+    [0, 0, 3],
+    [0, 0, 0]
+])
+
+N2 = N @ N
+N3 = N @ N @ N
+
+print("N^2 =\n", N2)
+print("\nN^3 =\n", N3)
+
+# Kontrollera om N3 är nollmatrisen
+ar_noll = np.all(N3 == 0)
+print(f"\nÄr N^3 nollmatrisen? {ar_noll}")
+print("Slutsats: Matrisen N är nilpotent med ordning 3!")</code></pre>
+                </div>
+              </details>
+            </div>
+          </div>
+        </div>
+
+        <!-- Exercise 3 -->
+        <div class="exercise-card" id="ex-card-3">
+          <div class="exercise-header">
+            <div class="exercise-title-wrap">
+              <span class="difficulty-badge level-medium">Nivå 2: Tillämpning</span>
+              <h3>Uppgift 3: Strömkrets och Linjärt Ekvationssystem</h3>
+            </div>
+          </div>
+          <div class="exercise-body">
+            <p class="exercise-text">
+              Genom att tillämpa Kirchhoffs lagar på en elektrisk krets med tre strömgrenar $I_1, I_2, I_3$ (i Ampere) 
+              erhålls följande ekvationssystem:
+            </p>
+            $$\begin{cases}
+            I_1 - I_2 - I_3 = 0 \\
+            4I_1 + 2I_2 = 12 \\
+            2I_2 - 5I_3 = 6
+            \end{cases}$$
+            <ol class="exercise-subtasks">
+              <li>Ställ upp koefficientmatrisen $A$ och högerledet $\vec{b}$.</li>
+              <li>Undersök om systemet har en entydig lösning genom att beräkna $\det(A)$.</li>
+              <li>Lös systemet med <code>np.linalg.solve(A, b)</code> och skriv ut strömmarna $I_1, I_2, I_3$.</li>
+            </ol>
+
+            <div class="code-box-wrapper" data-example-id="exercise-3">
+              <div class="code-box-header">
+                <div class="code-box-title">
+                  <span class="lang-badge">Övning 3</span>
+                  <span>Din kod:</span>
+                </div>
+                <div class="code-box-controls">
+                  <button class="btn-reset">Återställ</button>
+                  <button class="btn-run">▶ Kör kod</button>
+                  <button class="btn-check" data-exercise="3">✨ Rätta mitt svar</button>
+                </div>
+              </div>
+              <textarea class="code-editor" spellcheck="false">import numpy as np
+
+# 1. Definiera matrisen A och högerledet b
+A = np.array([
+    # Fyll i raderna här!
+])
+
+b = np.array([
+    # Fyll i b här!
+])
+
+# 2. Beräkna determinanten av A
+
+
+# 3. Lös ekvationssystemet
+
+</textarea>
+              <div class="code-output">
+                <div class="output-header">
+                  <span>Terminalutskrift</span>
+                  <span class="output-exec-time"></span>
+                </div>
+                <pre class="output-content">Skriv din lösning och klicka på "Kör min kod"...</pre>
+              </div>
+            </div>
+
+            <div class="exercise-accordion">
+              <details class="hint-details">
+                <summary class="hint-summary">💡 Visa ledtråd</summary>
+                <div class="accordion-content">
+                  <p>Koefficienterna för första ekvationen är $1, -1, -1$ och högerledet $0$.</p>
+                  <p>Andra ekvationen har ingen $I_3$, så dess koefficient är $0$: <code>[4, 2, 0]</code> med högerled $12$.</p>
+                  <p>Tredje ekvationen saknar $I_1$, så koefficienten är <code>[0, 2, -5]</code> med högerled $6$.</p>
+                </div>
+              </details>
+
+              <details class="solution-details">
+                <summary class="solution-summary">✅ Visa fullständigt lösningsförslag</summary>
+                <div class="accordion-content">
+                  <div class="solution-actions"><button type="button" class="btn-load-solution" data-exercise="3">📋 Kopiera lösningskoden till editorn ovan</button></div>
+                  <pre class="solution-code"><code>import numpy as np
+
+# 1. Matris A och vektor b
+A = np.array([
+    [1, -1, -1],
+    [4,  2,  0],
+    [0,  2, -5]
+])
+
+b = np.array([0, 12, 6])
+
+# 2. Determinant
+det_A = np.linalg.det(A)
+print(f"det(A) = {det_A:.2f}")
+
+if not np.isclose(det_A, 0):
+    print("Determinanten är skild från 0 -> Systemet har en entydig lösning!\n")
+
+# 3. Lös systemet
+strommar = np.linalg.solve(A, b)
+
+print(f"Ström I_1 = {strommar[0]:.2f} A")
+print(f"Ström I_2 = {strommar[1]:.2f} A")
+print(f"Ström I_3 = {strommar[2]:.2f} A")
+
+# Kontroll: A @ strommar bör bli lika med b
+print("\nKontroll A @ I =", np.round(A @ strommar, 4))</code></pre>
+                </div>
+              </details>
+            </div>
+          </div>
+        </div>
+
+        <!-- Exercise 4 -->
+        <div class="exercise-card" id="ex-card-4">
+          <div class="exercise-header">
+            <div class="exercise-title-wrap">
+              <span class="difficulty-badge level-medium">Nivå 2: Geometri</span>
+              <h3>Uppgift 4: Sammansatt geometrisk avbildning</h3>
+            </div>
+          </div>
+          <div class="exercise-body">
+            <p class="exercise-text">
+              I planet vill vi utföra två geometriska transformationer i följd på en punkt $\vec{p} = \begin{pmatrix} 2 \\ 1 \end{pmatrix}$:
+            </p>
+            <ol class="exercise-subtasks">
+              <li>Först spegla punkten i x-axeln med matrisen $S = \begin{pmatrix} 1 & 0 \\ 0 & -1 \end{pmatrix}$.</li>
+              <li>Därefter rotera resultatet $45^\circ$ moturs med rotationsmatrisen $R_{45^\circ}$.</li>
+              <li>Beräkna den <em>totala sammansatta avbildningsmatrisen</em> $M = R \cdot S$.</li>
+              <li>Beräkna slutpositionen för punkten $\vec{p}$ via $\vec{p}_{\text{slut}} = M \vec{p}$.</li>
+            </ol>
+
+            <div class="code-box-wrapper" data-example-id="exercise-4">
+              <div class="code-box-header">
+                <div class="code-box-title">
+                  <span class="lang-badge">Övning 4</span>
+                  <span>Din kod:</span>
+                </div>
+                <div class="code-box-controls">
+                  <button class="btn-reset">Återställ</button>
+                  <button class="btn-run">▶ Kör kod</button>
+                  <button class="btn-check" data-exercise="4">✨ Rätta mitt svar</button>
+                </div>
+              </div>
+              <textarea class="code-editor" spellcheck="false">import numpy as np
+
+# Ursprungspunkt
+p = np.array([2.0, 1.0])
+
+# 1. Speglingsmatris S
+
+
+# 2. Rotationsmatris R (vinkel 45 grader = pi/4 radianer)
+
+
+# 3. Sammansatt matris M = R @ S (Obs ordningen!)
+
+
+# 4. Slutlig position p_slut = M @ p
+
+</textarea>
+              <div class="code-output">
+                <div class="output-header">
+                  <span>Terminalutskrift</span>
+                  <span class="output-exec-time"></span>
+                </div>
+                <pre class="output-content">Skriv din lösning och klicka på "Kör min kod"...</pre>
+              </div>
+            </div>
+
+            <div class="exercise-accordion">
+              <details class="hint-details">
+                <summary class="hint-summary">💡 Visa ledtråd</summary>
+                <div class="accordion-content">
+                  <p>För 45 grader, använd <code>vinkel = np.radians(45)</code> eller <code>np.pi / 4</code>.</p>
+                  <p>Tänk noga på ordningen vid sammansättning! Först $S$, sedan $R$ innebär att vi beräknar $R(S\vec{p}) = (R \cdot S)\vec{p}$. Matrisen är alltså <code>M = R @ S</code>.</p>
+                </div>
+              </details>
+
+              <details class="solution-details">
+                <summary class="solution-summary">✅ Visa fullständigt lösningsförslag</summary>
+                <div class="accordion-content">
+                  <div class="solution-actions"><button type="button" class="btn-load-solution" data-exercise="4">📋 Kopiera lösningskoden till editorn ovan</button></div>
+                  <pre class="solution-code"><code>import numpy as np
+
+p = np.array([2.0, 1.0])
+
+# 1. Spegling i x-axeln
+S = np.array([
+    [1,  0],
+    [0, -1]
+])
+
+# 2. Rotation 45 grader moturs
+theta = np.radians(45)  # eller np.pi / 4
+R = np.array([
+    [np.cos(theta), -np.sin(theta)],
+    [np.sin(theta),  np.cos(theta)]
+])
+
+# 3. Sammansatt matris M = R @ S
+M = R @ S
+print("Sammansatt matris M:\n", np.round(M, 4))
+
+# 4. Slutposition
+p_slut = M @ p
+print("\nUrsprunglig punkt p:", p)
+print("Slutlig punkt efter spegling + rotation:", np.round(p_slut, 4))</code></pre>
+                </div>
+              </details>
+            </div>
+          </div>
+        </div>
+
+        <!-- Exercise 5 -->
+        <div class="exercise-card" id="ex-card-5">
+          <div class="exercise-header">
+            <div class="exercise-title-wrap">
+              <span class="difficulty-badge level-hard">Nivå 3: Specialisering</span>
+              <h3>Uppgift 5: Markovkedja och Jämviktsfördelning</h3>
+            </div>
+          </div>
+          <div class="exercise-body">
+            <p class="exercise-text">
+              På en skola köper elever lunch på antingen Caféet ($C$) eller Restaurangen ($R$). 
+              Sannolikheterna för var en elev äter nästa dag beror på var eleven åt idag:
+            </p>
+            <ul>
+              <li>Av de som äter på Caféet idag väljer $70\%$ Caféet imorgon och $30\%$ Restaurangen.</li>
+              <li>Av de som äter på Restaurangen idag väljer $20\%$ Caféet imorgon och $80\%$ Restaurangen.</li>
+            </ul>
+            <p>
+              Detta ger övergångsmatrisen:
+              $$P = \begin{pmatrix} 0.7 & 0.2 \\ 0.3 & 0.8 \end{pmatrix}$$
+              där kolumn 1 motsvarar dagens cafébesökare och kolumn 2 dagens restaurangbesökare.
+            </p>
+            <ol class="exercise-subtasks">
+              <li>Om dag 0 börjar med $100\%$ på caféet, $\vec{x}_0 = \begin{pmatrix} 1.0 \\ 0.0 \end{pmatrix}$, beräkna fördelningen efter 1 dag, 5 dagar och 30 dagar ($\vec{x}_k = P^k \vec{x}_0$).</li>
+              <li>Beräkna egenvärden och egenvektorer för $P$ med <code>np.linalg.eig(P)</code>.</li>
+              <li>Identifiera egenvektorn för egenvärdet $\lambda = 1$. Normalisera den så att summan av komponenterna blir $1$ (100%). Stämmer detta med fördelningen efter 30 dagar?</li>
+            </ol>
+
+            <div class="code-box-wrapper" data-example-id="exercise-5">
+              <div class="code-box-header">
+                <div class="code-box-title">
+                  <span class="lang-badge">Övning 5</span>
+                  <span>Din kod:</span>
+                </div>
+                <div class="code-box-controls">
+                  <button class="btn-reset">Återställ</button>
+                  <button class="btn-run">▶ Kör kod</button>
+                  <button class="btn-check" data-exercise="5">✨ Rätta mitt svar</button>
+                </div>
+              </div>
+              <textarea class="code-editor" spellcheck="false">import numpy as np
+
+# Övergångsmatrisen P
+P = np.array([
+    [0.7, 0.2],
+    [0.3, 0.8]
+])
+
+# Startfördelning dag 0
+x0 = np.array([1.0, 0.0])
+
+# 1. Simulera 30 dagar genom upprepad matrismultiplikation
+x = x0.copy()
+for dag in range(1, 31):
+    x = P @ x
+    if dag in [1, 5, 30]:
+        print(f"Dag {dag}: Café={x[0]:.4f}, Restaurang={x[1]:.4f}")
+
+# 2. Hitta egenvärden och egenvektorer
+evals, evecs = np.linalg.eig(P)
+print("\nEgenvärden:", np.round(evals, 4))
+
+# 3. Egenvektor för lambda = 1 (jämviktsläget)
+# Fyll i här!
+</textarea>
+              <div class="code-output">
+                <div class="output-header">
+                  <span>Terminalutskrift</span>
+                  <span class="output-exec-time"></span>
+                </div>
+                <pre class="output-content">Skriv din lösning och klicka på "Kör min kod"...</pre>
+              </div>
+            </div>
+
+            <div class="exercise-accordion">
+              <details class="hint-details">
+                <summary class="hint-summary">💡 Visa ledtråd</summary>
+                <div class="accordion-content">
+                  <p>I en stokastisk matris finns alltid ett egenvärde $\lambda = 1$.</p>
+                  <p>Hitta kolumnen i <code>evecs</code> som hör till $\lambda = 1$. Om <code>evals[1] == 1.0</code>, är egenvektorn <code>v = evecs[:, 1]</code>.</p>
+                  <p>För att normalisera så att summan blir 1 (procent): dividera med summan <code>v_norm = v / np.sum(v)</code>.</p>
+                </div>
+              </details>
+
+              <details class="solution-details">
+                <summary class="solution-summary">✅ Visa fullständigt lösningsförslag</summary>
+                <div class="accordion-content">
+                  <div class="solution-actions"><button type="button" class="btn-load-solution" data-exercise="5">📋 Kopiera lösningskoden till editorn ovan</button></div>
+                  <pre class="solution-code"><code>import numpy as np
+
+P = np.array([
+    [0.7, 0.2],
+    [0.3, 0.8]
+])
+
+x = np.array([1.0, 0.0])
+
+# 1. Fördelning över tid
+for dag in range(1, 31):
+    x = P @ x
+    if dag in [1, 5, 30]:
+        print(f"Dag {dag}: Café = {x[0]*100:.1f}%, Restaurang = {x[1]*100:.1f}%")
+
+# 2. Egenvärden och egenvektorer
+evals, evecs = np.linalg.eig(P)
+print("\nEgenvärden:", np.round(evals, 4))
+
+# 3. Hitta egenvektorn för lambda = 1.0
+idx = np.where(np.isclose(evals, 1.0))[0][0]
+jamvikt = evecs[:, idx]
+
+# Normalisera så att komponenternas summa blir 1
+jamvikt = jamvikt / np.sum(jamvikt)
+
+print(f"\nTeoretisk jämvikt (stabil fördelning):")
+print(f"Café:       {jamvikt[0]*100:.1f}% (dvs 40%)")
+print(f"Restaurang: {jamvikt[1]*100:.1f}% (dvs 60%)")
+print("\n-> Efter 30 dagar har systemet konvergerat exakt mot jämviktsvektorn!")</code></pre>
+                </div>
+              </details>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- Section 9: Fri Sandlåda -->
+      <section id="sandbox" class="content-section">
+        <div class="section-header">
+          <span class="section-tag">Laboration</span>
+          <h2>Fri Kod-Sandlåda (Experimentera Fritt)</h2>
+          <p class="section-subtitle">Här kan du skriva valfri Python-kod, testa egna matriser, utforska felmeddelanden och experimentera obegränsat!</p>
+        </div>
+
+        <div class="code-box-wrapper" data-example-id="sandbox-main">
+          <div class="code-box-header">
+            <div class="code-box-title">
+              <span class="lang-badge">Sandlåda</span>
+              <span>Python 3 + NumPy Sandbox</span>
+            </div>
+            <div class="code-box-controls">
+              <button class="btn-copy">Kopiera</button>
+              <button class="btn-reset">Återställ</button>
+              <button class="btn-run">▶ Kör kod</button>
+            </div>
+          </div>
+          <textarea class="code-editor" spellcheck="false" style="min-height: 220px;">import numpy as np
+
+# Skapa egna matriser och prova vad du vill!
+A = np.array([
+    [1, 2, 3],
+    [0, 1, 4],
+    [5, 6, 0]
+])
+
+print("Matris A:\n", A)
+print("\nDeterminant:", np.linalg.det(A))
+print("\nInvers:\n", np.linalg.inv(A))
+</textarea>
+          <div class="code-output">
+            <div class="output-header">
+              <span>Terminalutskrift</span>
+              <span class="output-exec-time"></span>
+            </div>
+            <pre class="output-content">Tryck på "Kör kod" för att köra din kod...</pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- Footer -->
+      <footer class="site-footer">
+        <div class="footer-inner">
+          <p>
+            <strong>Linjär Algebra med Python</strong> &bull; Utformad för gymnasiekursen <em>Matematik – specialisering</em>.
+          </p>
+          <p class="footer-sub">
+            Drivs av WebAssembly (Pyodide) och NumPy. All kod exekveras helt lokalt och säkert i din webbläsare.
+          </p>
+        </div>
+      </footer>
+
+    </main>
+  </div>
+
+  <!-- Main JavaScript File -->
+  <script src="script.js"></script>
+</body>
+</html>
