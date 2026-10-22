@@ -45,6 +45,6 @@
   <circle cx="41" cy="40" r="3.2" fill="#fbbf24" />
 
   <!-- Dynamic Vector Arrow shooting across matrix space -->
-  <path d="M 6 46 L 56 20" fill="none" stroke="#34d399" stroke-width="3.5" stroke-linecap="round" filter="url(#glow)" />
+  <path d="M 6 44 L 56 20" fill="none" stroke="#34d399" stroke-width="3.5" stroke-linecap="round" filter="url(#glow)" />
   <polygon points="60,17 50,18 55,26" fill="#34d399" filter="url(#glow)" />
 </svg>
